@@ -4,7 +4,7 @@ module Main where
 
 -- This attoparsec module is intended for parsing text that is
 -- represented using an 8-bit character set, e.g. ASCII or ISO-8859-15.
-import Data.Attoparsec.Char8
+import Data.Attoparsec.ByteString.Char8
 import Data.Word
 
 -- | Type for IP's.

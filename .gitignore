@@ -1,2 +1,5 @@
 /stack-project/stack.yaml.lock
 
+*~
+/stack-project/stack-project.cabal
+stack-project/.stack-work/

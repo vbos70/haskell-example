@@ -24,7 +24,10 @@ dependencies:
 
 library:
   source-dirs: src
-
+  dependencies:
+  - attoparsec
+  - text
+  
 executables:
   stack-project-exe:
     main:                Main.hs
@@ -35,7 +38,6 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - stack-project
-    - attoparsec
 
 tests:
   stack-project-test:

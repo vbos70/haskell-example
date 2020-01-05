@@ -1,6 +1,15 @@
 module Lib
-    ( someFunc
+    ( Process (..)
+      
     ) where
 
-someFunc :: IO ()
-someFunc = putStrLn "someFunc"
+data Process = Atom String
+             | Empty
+             | Deadlock
+             | Seq Process Process
+             | Alt Process Process
+             | Rep Process
+             deriving (Show)
+
+
+

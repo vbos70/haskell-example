@@ -38,7 +38,9 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - stack-project
-
+    - attoparsec
+    - text
+  
 tests:
   stack-project-test:
     main:                Spec.hs

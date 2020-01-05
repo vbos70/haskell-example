@@ -2,7 +2,8 @@
 
 module Main where
 
+import Data.Text
 import qualified Lib as L
 
 main :: IO ()
-main = print $ L.Alt L.Empty (L.Atom "Hallo")
+main = print $ L.parseProcess "Empty "

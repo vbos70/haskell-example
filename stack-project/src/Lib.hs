@@ -20,8 +20,7 @@ data Process = Atom Text
              deriving (Eq, Show)
 
 processParser :: Parser Process
-processParser = Empty <$ (string "Empty")
-
+processParser = Empty <$ (string "Empty") <* endOfInput
 
 parseProcess :: Text -> Process
 parseProcess t = toProcess (parseOnly processParser t)

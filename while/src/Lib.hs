@@ -73,8 +73,14 @@ semi       = Token.semi       lexer -- parses a semicolon
 whiteSpace = Token.whiteSpace lexer -- parses whitespace
 
 whileParser :: Parser Stmt
-whileParser = whiteSpace >> statement
+whileParser = whiteSpace >> whileprog
 
+whileprog :: Parser Stmt
+whileprog = do
+  stmt <- statement
+  eof
+  return stmt
+  
 statement :: Parser Stmt
 statement =   parens statement
           <|> sequenceOfStmt

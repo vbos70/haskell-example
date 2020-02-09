@@ -17,27 +17,8 @@
 #
 # resolver: ./custom-snapshot.yaml
 # resolver: https://example.com/snapshots/2018-01-01.yaml
-# Fields not mentioned below do not need to be updated
-# Frozen version of resolver
-resolver:
-  size: 524155
-  url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/14/19.yaml                                                                                                                                                                            
-  sha256: 9f79f6494473c9b46911364b94c4b5ef19ca8d35ebf62e46697cf651f198ee19                                                                                                                                                                                                     
-# Dependency packages to be pulled from upstream that are not in the resolver.
-# These entries can reference officially published versions as well as
-# forks / in-progress versions pinned to a git hash. For example:
-#
-# extra-deps:
-# - acme-missiles-0.3
-# - git: https://github.com/commercialhaskell/stack.git
-#   commit: e7b331f14bcffb8367cd58fbfc8b40ec7642100a
-#
-# Frozen version of extra-deps                                                                                                                                                                                                                                                 
-extra-deps:                                                                                                                                                                                                                                                                    
-- hackage: attoparsec-0.13.2.3@sha256:38717f481a131e1f50ce8e126f49961e6fe740f55df53e5e45cbbf8c451a9698,5695                                                                                                                                                                    
-  pantry-tree:                                                                                                                                                                                                                                                                 
-    size: 5231                                                                                                                                                                                                                                                                 
-    sha256: 6fd8933535f478eb3a8ae67ccd601bac58f05356c4ce912b89a12a9eba2543aa                                                                                                                                                                                                   
+resolver: lts-14.22
+
 # User packages to be built.
 # Various formats can be used as shown in the example below.
 #
@@ -49,6 +30,16 @@ extra-deps:
 #   - wai
 packages:
 - .
+# Dependency packages to be pulled from upstream that are not in the resolver.
+# These entries can reference officially published versions as well as
+# forks / in-progress versions pinned to a git hash. For example:
+#
+# extra-deps:
+# - acme-missiles-0.3
+# - git: https://github.com/commercialhaskell/stack.git
+#   commit: e7b331f14bcffb8367cd58fbfc8b40ec7642100a
+#
+# extra-deps: []
 
 # Override default flag values for local packages and extra-deps
 # flags: {}

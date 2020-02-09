@@ -5,12 +5,45 @@ module Lib
       parseProcess
     ) where
 
-import Control.Applicative
-import Data.Char
+import System.IO
+import Control.Monad
 import Data.Text
-import Data.Attoparsec.Text
+import Text.ParserCombinators.Parsec
+import Text.ParserCombinators.Parsec.Expr
+import Text.ParserCombinators.Parsec.Language
+import qualified Text.ParserCombinators.Parsec.Token as Token
 
-data Process = Atom Text
+languageDef =
+  emptyDef { Token.commentStart    = "/*"
+           , Token.commentEnd      = "*/"
+           , Token.commentLine     = "//"
+           , Token.identStart      = letter
+           , Token.identLetter     = alphaNum
+           , Token.reservedNames   = [ "Deadlock"
+                                     , "Empty"
+                                     ]
+           , Token.reservedOpNames = ["|", ";", "*"
+                                     ]
+           }
+
+lexer = Token.makeTokenParser languageDef
+
+
+identifier = Token.identifier lexer -- parses an identifier
+reserved   = Token.reserved   lexer -- parses a reserved name
+reservedOp = Token.reservedOp lexer -- parses an operator
+parens     = Token.parens     lexer -- parses surrounding parenthesis:
+                                    --   parens p
+                                    -- takes care of the parenthesis and
+                                    -- uses p to parse what's inside them
+whiteSpace = Token.whiteSpace lexer -- parses whitespace
+
+procOperators = [ [Infix (reservedOp ";"   >> return (Seq )) AssocLeft ]
+                , [Prefix (reservedOp "*"   >> return (Rep )) ]
+                , [Infix (reservedOp "|"   >> return (Alt )) AssocLeft ]
+                ]
+
+data Process = Atom String
              | Empty
              | Deadlock
              | Seq Process Process
@@ -19,25 +52,25 @@ data Process = Atom Text
              | Error Text
              deriving (Eq, Show)
 
+processExpr :: Parser Process
+processExpr = buildExpressionParser procOperators processTerm
+
+processTerm = parens processExpr
+           <|> (reserved "Deadlock"  >> return Deadlock)
+           <|> (reserved "Empty"  >> return Empty)
+           <|> liftM Atom identifier
+
+
 processParser :: Parser Process
-processParser = simpleProcess <* endOfInput
-
-simpleProcess :: Parser Process
-simpleProcess = emptyParser <|> deadlockParser <|> atomParser
-
-emptyParser :: Parser Process
-emptyParser = Empty <$ (string "!")
-
-deadlockParser :: Parser Process
-deadlockParser = Deadlock <$ (string "?")
-
-atomParser :: Parser Process
-atomParser = Atom <$> do
-  s <- many1 (letter <|> digit)
-  return (pack s)
+processParser =
+  do whiteSpace
+     p <- processExpr
+     eof
+     return p
 
 parseProcess :: Text -> Process
-parseProcess t = toProcess (parseOnly processParser t)
-  where toProcess (Left msg) = Error (pack msg)
-        toProcess (Right p) = p
+parseProcess t =
+  case parse processParser "" (unpack t) of
+    Left e -> Error (pack (show e))
+    Right p -> p
 

@@ -25,11 +25,11 @@ dependencies:
 library:
   source-dirs: src
   dependencies:
-  - attoparsec
+  - parsec
   - text
   
 executables:
-  stack-project-exe:
+  parse-exe:
     main:                Main.hs
     source-dirs:         app
     ghc-options:
@@ -37,7 +37,7 @@ executables:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
-    - attoparsec
+    - parsec
     - haskeline
     - stack-project
     - text

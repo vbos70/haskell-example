@@ -23,7 +23,7 @@ languageDef =
            , Token.reservedNames   = [ "Deadlock"
                                      , "Empty"
                                      ]
-           , Token.reservedOpNames = ["|", ";", "*"
+           , Token.reservedOpNames = ["*", ";", "|" 
                                      ]
            }
 
@@ -39,8 +39,8 @@ parens     = Token.parens     lexer -- parses surrounding parenthesis:
                                     -- uses p to parse what's inside them
 whiteSpace = Token.whiteSpace lexer -- parses whitespace
 
-procOperators = [ [Infix (reservedOp ";"   >> return (Seq )) AssocLeft ]
-                , [Prefix (reservedOp "*"   >> return (Rep )) ]
+procOperators = [ [Prefix (reservedOp "*"   >> return (Rep )) ]
+                , [Infix (reservedOp ";"   >> return (Seq )) AssocLeft ]
                 , [Infix (reservedOp "|"   >> return (Alt )) AssocLeft ]
                 ]
 
@@ -77,12 +77,12 @@ parseProcess t =
 
 priority :: Process -> Int
 priority (Alt x y) = 3
-priority (Rep x) = 2
-priority (Seq x y) = 1
+priority (Seq x y) = 2
+priority (Rep x) = 1
 priority _ = 0
 
 prefixOpProcessToParenStr :: String -> Process -> Int -> String 
-prefixOpProcessToParenStr opStr x p = opStr ++ x_str1
+prefixOpProcessToParenStr opStr x p = opStr ++ x_str2
   where
     prior_x = priority x
     x_str1 = processToParenStr x prior_x
@@ -91,7 +91,7 @@ prefixOpProcessToParenStr opStr x p = opStr ++ x_str1
       | otherwise   = x_str1
 
 binOpProcessToParenStr :: Process -> String -> Process -> Int -> String 
-binOpProcessToParenStr x opStr y p = x_str2 ++ opStr ++ y_str1
+binOpProcessToParenStr x opStr y p = x_str2 ++ opStr ++ y_str2
   where
     prior_x = priority x
     prior_y = priority y
